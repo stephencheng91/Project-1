@@ -1,8 +1,8 @@
 
 body{
     background-image: url("../assets/background.jpg");
-    opacity: 0.8;
-    filter: alpha(opacity=80);
+    opacity: 0.95;
+    filter: alpha(opacity=95);
     
 }
     
