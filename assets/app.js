@@ -39,4 +39,8 @@
         city: city,
         gender: gender
     })
+
+    database.ref().orderByChild("city").equalTo(city).on("child_added", function (snapshot) {
+        console.log("filtering", snapshot.val());
+      });
  })
