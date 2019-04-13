@@ -73,32 +73,30 @@ if (localStorage.getItem("selectedCity")) {
         firebaseAdded("city", "selectedCity");
  }
 
-function firebaseAdded(parameter1, parameter2) {
+ function firebaseAdded(parameter1, parameter2) {
     database.ref().orderByChild(parameter1).equalTo(localStorage.getItem(parameter2)).on("child_added", function (snapshot) {
+        childName = snapshot.val().name;
+        childAge = snapshot.val().age;
+        childGender = snapshot.val().gender;
+        childCity = snapshot.val().city;
 
-    var tableRow=$("<tr>");
-    $("#tableBody").append(tableRow);
- 
-    var tableName = $("<td>");
-    tableRow.append(tableName.text(snapshot.val().name));
- 
-    var tableAge = $("<td>");
-    tableRow.append(tableAge.text(snapshot.val().age));
- 
-    var tableGender = $("<td>");
-    tableRow.append(tableGender.text(snapshot.val().gender));
- 
-    var tableCity = $("<td>");
-    tableRow.append(tableCity.text(snapshot.val().city));
+      console.log(database.ref("gender").once("value"));
     
-    var beefRow = $("<tr>");
-    $("#tableBody").append(beefRow);
+      if(localStorage.getItem("selectedGender", gender) !== childGender){
+        var tableRow = $("<tr>");
+        $("#tableBody").append(tableRow);
 
-    if(localStorage.getItem("selectedReligion", religion) !== database.ref().orderByChild("religion").once("value")) {
-    var tableReligion = $("<td>");
-    beefRow.append(tableReligion.text(snapshot.val().religion));
-    } else {
-    console.log("samsies")
-    }
+        var tableName = $("<td>");
+        tableRow.append(tableName.text(childName));
+
+        var tableAge = $("<td>");
+        tableRow.append(tableAge.text(childAge));
+
+        var tableGender = $("<td>");
+        tableRow.append(tableGender.text(childGender));
+
+        var tableCity = $("<td>");
+        tableRow.append(tableCity.text(childCity));
+      }
+    });
 }
-)}
