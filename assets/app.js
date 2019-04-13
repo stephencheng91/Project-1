@@ -11,6 +11,7 @@
 
  firebase.initializeApp(config);
 
+
  var database = firebase.database();
 
  var name = "";
@@ -31,7 +32,6 @@
         gender = "female"
     }
 
-    console.log(city)
 
     database.ref().push({
         name: name,
@@ -40,3 +40,7 @@
         gender: gender
     })
  })
+
+ $("#add-user-btn").click(function() {
+	window.location = 'matches.html';
+})
