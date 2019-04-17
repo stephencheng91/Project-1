@@ -33,6 +33,7 @@ $("#add-user-btn").click(function (event) {
     } else {
         gender = "female"
     }
+    politics = $("#politics-input").val();
     religion = $("#religion-input").val();
     computer = $("#computer-input").val();
     guns = $("#guns-input").val();
@@ -42,6 +43,7 @@ $("#add-user-btn").click(function (event) {
         age: age,
         city: city,
         gender: gender,
+        politics: politics,
         religion: religion,
         computer: computer,
         guns: guns
@@ -51,6 +53,7 @@ $("#add-user-btn").click(function (event) {
     localStorage.setItem('selectedAge', age);
     localStorage.setItem('selectedCity', city);
     localStorage.setItem('selectedGender', gender);
+    localStorage.setItem('selectedPolitics', politics);
     localStorage.setItem('selectedReligion', religion);
     localStorage.setItem('selectedComputer', computer);
     localStorage.setItem('selectedGuns', guns);
@@ -63,37 +66,7 @@ $("#add-user-btn").click(function (event) {
     window.location = "matches.html";
 })
 
-
-database.ref().on("child_added", function (snapshot, prevChildKey) {
-
-    console.log(prevChildKey);
-
-    var childName = snapshot.val().name;
-    var childAge = snapshot.val().age;
-    var childGender = snapshot.val().gender;
-    var childCity = snapshot.val().city;
-
-    var tableRow = $("<tr>");
-    $("#tableBody").append(tableRow);
-
-    var tableName = $("<td>");
-    tableRow.append(tableName.text(childName));
-
-    var tableAge = $("<td>");
-    tableRow.append(tableAge.text(childAge));
-
-    var tableGender = $("<td>");
-    tableRow.append(tableGender.text(childGender));
-
-    var tableCity = $("<td>");
-    tableRow.append(tableCity.text(childCity));
-
-})
-
-
-
-
-var map = infoWindow;
+var map, infoWindow;
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: -34.397, lng: 150.644 },
@@ -142,24 +115,35 @@ function firebaseAdded(parameter1, parameter2) {
         childAge = snapshot.val().age;
         childGender = snapshot.val().gender;
         childCity = snapshot.val().city;
+        childPolitics = snapshot.val().politics;
 
         console.log(database.ref("gender").once("value"));
 
-        if (localStorage.getItem("selectedGender", gender) !== childGender) {
-            var tableRow = $("<tr>");
-            $("#tableBody").append(tableRow);
+        if (localStorage.getItem("selectedGender", gender) == childGender) {
 
-            var tableName = $("<td>");
-            tableRow.append(tableName.text(childName));
+            if (localStorage.getItem("selectedPolitics", politics) !== childPolitics) {
+                
+                
 
-            var tableAge = $("<td>");
-            tableRow.append(tableAge.text(childAge));
+                var tableRow = $("<tr>");
+                $("#tableBody").append(tableRow);
 
-            var tableGender = $("<td>");
-            tableRow.append(tableGender.text(childGender));
+                var tableName = $("<td>");
+                tableRow.append(tableName.text(childName));
 
-            var tableCity = $("<td>");
-            tableRow.append(tableCity.text(childCity));
+                var tableAge = $("<td>");
+                tableRow.append(tableAge.text(childAge));
+
+                var tableGender = $("<td>");
+                tableRow.append(tableGender.text(childGender));
+
+                var tableCity = $("<td>");
+                tableRow.append(tableCity.text(childCity));
+
+                var tablePolitics = $("<td>");
+                tableRow.append(tablePolitics.text(childPolitics));
+            }
+
         }
     });
 }
