@@ -13,18 +13,18 @@ firebase.initializeApp(config);
 
 var database = firebase.database();
 
-var name = "";
-var age=0;
-var city = "";
-var gender = "";
+var database = firebase.database();
 
-//Variable for pulling from firebase
-var childName = "";
-var childAge = "";
-var childGender = "";
-var childCity = "";
 
-$("#add-user-btn").click(function (event) {
+ var name = "";
+ var age = 0;
+ var city = "";
+ var gender = "";
+ var politics = "";
+ var religion = "";
+ var computer = "";
+ var guns = "";
+
 
     event.preventDefault();
 
@@ -36,33 +36,115 @@ $("#add-user-btn").click(function (event) {
     } else {
         gender = "female"
     }
-
-    localStorage.clear();
-    localStorage.setItem('selectedGender', gender);
-    localStorage.setItem('selectedAge', age);
-    localStorage.setItem('selectedCity', city);
+    religion = $("#religion-input").val();
+    computer = $("#computer-input").val();
+    guns = $("#guns-input").val();
 
     database.ref().push({
         name: name,
         age: age,
         city: city,
-        gender: gender
+        gender: gender,
+        religion: religion,
+        computer: computer,
+        guns: guns
     })
-})
+
+
+    localStorage.clear();
+    localStorage.setItem('selectedName', name);
+    localStorage.setItem('selectedAge', age);
+    localStorage.setItem('selectedCity', city);
+    localStorage.setItem('selectedGender', gender);
+    localStorage.setItem('selectedReligion', religion);
+    localStorage.setItem('selectedComputer', computer);
+    localStorage.setItem('selectedGuns', guns );
+
+    database.ref().orderByChild("city").equalTo(city).on("child_added", function (snapshot) {
+
+        console.log("filtering", snapshot.val());
+      });
+
+
 
 $("#add-user-btn").click(function () {
     window.location = 'matches.html';
 })
 
 
-// if (localStorage.getItem("selectedCity")) {
-//     firebaseAdded("city", "selectedCity");
-// }
-if (localStorage.getItem("selectedCity")) {
-        firebaseAdded("city", "selectedCity");
+database.ref().on("child_added", function (snapshot, prevChildKey) {
+
+    console.log(prevChildKey);
+
+    var childName = snapshot.val().name;
+    var childAge = snapshot.val().age;
+    var childGender = snapshot.val().gender;
+    var childCity = snapshot.val().city;
+
+    var tableRow = $("<tr>");
+    $("#tableBody").append(tableRow);
+
+    var tableName = $("<td>");
+    tableRow.append(tableName.text(childName));
+
+    var tableAge = $("<td>");
+    tableRow.append(tableAge.text(childAge));
+
+    var tableGender = $("<td>");
+    tableRow.append(tableGender.text(childGender));
+
+    var tableCity = $("<td>");
+    tableRow.append(tableCity.text(childCity));
+
+});
+
+
+
+
+var map, infoWindow;
+function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: -34.397, lng: 150.644 },
+        zoom: 6
+    });
+    infoWindow = new google.maps.InfoWindow;
+
+    // Try HTML5 geolocation.
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            var pos = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+
+            infoWindow.setPosition(pos);
+            infoWindow.setContent('You are here, Dude.');
+            infoWindow.open(map);
+            map.setCenter(pos);
+        }, function () {
+            handleLocationError(true, infoWindow, map.getCenter());
+        });
+    } else {
+        // Browser doesn't support Geolocation
+        handleLocationError(false, infoWindow, map.getCenter());
+    }
 }
 
-function firebaseAdded(parameter1, parameter2) {
+function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+    infoWindow.setPosition(pos);
+    infoWindow.setContent(browserHasGeolocation ?
+        'Error: The Geolocation service failed.' :
+        'Error: Your browser doesn\'t support geolocation.');
+    infoWindow.open(map);
+}
+
+
+
+if (localStorage.getItem("selectedCity")) {
+        firebaseAdded("city", "selectedCity");
+ }
+
+ function firebaseAdded(parameter1, parameter2) {
     database.ref().orderByChild(parameter1).equalTo(localStorage.getItem(parameter2)).on("child_added", function (snapshot) {
         childName = snapshot.val().name;
         childAge = snapshot.val().age;
@@ -87,11 +169,6 @@ function firebaseAdded(parameter1, parameter2) {
         var tableCity = $("<td>");
         tableRow.append(tableCity.text(childCity));
       }
-
-
-
     });
 }
-
-
 
