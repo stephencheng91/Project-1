@@ -14,9 +14,15 @@ firebase.initializeApp(config);
 var database = firebase.database();
 
 var name = "";
-var age = 0;
+var age=0;
 var city = "";
 var gender = "";
+
+//Variable for pulling from firebase
+var childName = "";
+var childAge = "";
+var childGender = "";
+var childCity = "";
 
 $("#add-user-btn").click(function (event) {
 
@@ -31,6 +37,10 @@ $("#add-user-btn").click(function (event) {
         gender = "female"
     }
 
+    localStorage.clear();
+    localStorage.setItem('selectedGender', gender);
+    localStorage.setItem('selectedAge', age);
+    localStorage.setItem('selectedCity', city);
 
     database.ref().push({
         name: name,
@@ -44,33 +54,44 @@ $("#add-user-btn").click(function () {
     window.location = 'matches.html';
 })
 
-database.ref().orderByChild("age").equalTo(age - 5 <= age && age <= age + 5).on("child_added", function (snapshot) {
-    console.log("filtering", snapshot.val());
-});
 
+// if (localStorage.getItem("selectedCity")) {
+//     firebaseAdded("city", "selectedCity");
+// }
+if (localStorage.getItem("selectedCity")) {
+        firebaseAdded("city", "selectedCity");
+}
 
-database.ref().on("child_added", function (snapshot, prevChildKey) {
+function firebaseAdded(parameter1, parameter2) {
+    database.ref().orderByChild(parameter1).equalTo(localStorage.getItem(parameter2)).on("child_added", function (snapshot) {
+        childName = snapshot.val().name;
+        childAge = snapshot.val().age;
+        childGender = snapshot.val().gender;
+        childCity = snapshot.val().city;
 
-    console.log(prevChildKey);
-
-    var childName=snapshot.val().name;
-    var childAge=snapshot.val().age;
-    var childGender=snapshot.val().gender;
-    var childCity=snapshot.val().city;
-
-    var tableRow=$("<tr>");
-    $("#tableBody").append(tableRow);
+      console.log(database.ref("gender").once("value"));
     
-    var tableName = $("<td>");
-    tableRow.append(tableName.text(childName));
+      if(localStorage.getItem("selectedGender", gender) !== childGender){
+        var tableRow = $("<tr>");
+        $("#tableBody").append(tableRow);
 
-    var tableAge = $("<td>");
-    tableRow.append(tableAge.text(childAge));
+        var tableName = $("<td>");
+        tableRow.append(tableName.text(childName));
 
-    var tableGender = $("<td>");
-    tableRow.append(tableGender.text(childGender));
+        var tableAge = $("<td>");
+        tableRow.append(tableAge.text(childAge));
 
-    var tableCity = $("<td>");
-    tableRow.append(tableCity.text(childCity));
+        var tableGender = $("<td>");
+        tableRow.append(tableGender.text(childGender));
 
-});
+        var tableCity = $("<td>");
+        tableRow.append(tableCity.text(childCity));
+      }
+
+
+
+    });
+}
+
+
+
