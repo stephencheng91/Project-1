@@ -14,6 +14,7 @@
 
  var database = firebase.database();
 
+//Variables used to hold user information
  var name = "";
  var age = 0;
  var city = "";
@@ -23,6 +24,7 @@
  var computer = "";
  var guns = "";
 
+//On clicking submit button, save the entered in values
  $("#add-user-btn").click(function(event) {
    
     event.preventDefault();
@@ -39,6 +41,7 @@
     computer = $("#computer-input").val();
     guns = $("#guns-input").val();
 
+//Push these variables to firebase
     database.ref().push({
         name: name,
         age: age,
@@ -49,6 +52,7 @@
         guns: guns
     })
 
+//Clear local storage and then save the users information
     localStorage.clear();
     localStorage.setItem('selectedName', name);
     localStorage.setItem('selectedAge', age);
@@ -64,6 +68,7 @@
       });
  })
 
+//Switch to matches page on clicking submit button
  $("#add-user-btn").click(function() {
 	window.location = 'matches.html';
 })
