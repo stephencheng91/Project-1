@@ -22,7 +22,9 @@ var religion = "";
 var computer = "";
 var guns = "";
 
+
 $("#add-user-btn").click(function (event) {
+
     event.preventDefault();
 
     name = $("#name-input").val();
@@ -33,24 +35,31 @@ $("#add-user-btn").click(function (event) {
     } else {
         gender = "female"
     }
+    politics = $("#politics-input").val();
     religion = $("#religion-input").val();
     computer = $("#computer-input").val();
     guns = $("#guns-input").val();
 
+//Push these variables to firebase
     database.ref().push({
         name: name,
         age: age,
         city: city,
         gender: gender,
         religion: religion,
+        politics: politics,
         computer: computer,
         guns: guns
     })
+
+//Clear local storage and then save the users information
+
     localStorage.clear();
     localStorage.setItem('selectedName', name);
     localStorage.setItem('selectedAge', age);
     localStorage.setItem('selectedCity', city);
     localStorage.setItem('selectedGender', gender);
+    localStorage.setItem('selectedPolitics', politics);
     localStorage.setItem('selectedReligion', religion);
     localStorage.setItem('selectedComputer', computer);
     localStorage.setItem('selectedGuns', guns);
@@ -64,33 +73,69 @@ $("#add-user-btn").click(function (event) {
 })
 
 
-database.ref().on("child_added", function (snapshot, prevChildKey) {
+if (localStorage.getItem("selectedCity")) {
+        firebaseAdded("city", "selectedCity");
+ }
 
-    console.log(prevChildKey);
+ function firebaseAdded(parameter1, parameter2) {
+    database.ref().orderByChild(parameter1).equalTo(localStorage.getItem(parameter2)).on("child_added", function (snapshot) {
+        childName = snapshot.val().name;
+        childAge = snapshot.val().age;
+        childGender = snapshot.val().gender;
+        childCity = snapshot.val().city;
+        childReligion = snapshot.val().religion
+        childPolitics = snapshot.val().politics
+        childGuns = snapshot.val().guns
+        childComputer = snapshot.val().computer
 
-    var childName = snapshot.val().name;
-    var childAge = snapshot.val().age;
-    var childGender = snapshot.val().gender;
-    var childCity = snapshot.val().city;
+      //console.log(database.ref("gender").once("value"));
+    
+      if(localStorage.getItem("selectedGender", gender) !== childGender){
+        var tableRow = $("<tr>");
+        $("#tableBody").append(tableRow);
 
-    var tableRow = $("<tr>");
-    $("#tableBody").append(tableRow);
+        var tableName = $("<td>");
+        tableRow.append(tableName.text(childName));
 
-    var tableName = $("<td>");
-    tableRow.append(tableName.text(childName));
+        var tableAge = $("<td>");
+        tableRow.append(tableAge.text(childAge));
 
-    var tableAge = $("<td>");
-    tableRow.append(tableAge.text(childAge));
-
-    var tableGender = $("<td>");
-    tableRow.append(tableGender.text(childGender));
-
-    var tableCity = $("<td>");
-    tableRow.append(tableCity.text(childCity));
+        var tableGender = $("<td>");
+        tableRow.append(tableGender.text(childGender));
 
 })
 
 
+        var tableCity = $("<td>");
+        tableRow.append(tableCity.text(childCity));
+
+        var tableSecondRow = $("<tr>")
+        
+        var areasOfConflict = "AREAS OF CONFLICT: ";
+        // $(areasOfConflict.css({'font-weight': 'Bold'})
+        var conflict = $("<td>")
+        conflict.attr("colspan", 4)
+        conflict.css("background", "red")
+            
+            if(localStorage.getItem("selectedReligion", religion) !== childReligion) {
+                areasOfConflict += "Religion: " + childReligion + " ";
+            }
+            if(localStorage.getItem("selectedPolitics", politics) !== childPolitics) {
+                areasOfConflict += "Politics: " + childPolitics + " ";
+            }
+            if(localStorage.getItem("selectedGuns", guns) !== childGuns) {
+                areasOfConflict += "Gun Control: " + childGuns + " ";
+            }
+            if(localStorage.getItem("selectedComputer", computer) !== childComputer) {
+                areasOfConflict += "Computer Preference: " + childComputer + " ";
+            }
+
+            conflict.text(areasOfConflict);
+            tableSecondRow.append(conflict);
+            $("#tableBody").append(tableSecondRow);
+        }
+    })
+ }
 
 
 var map = infoWindow;
@@ -130,37 +175,4 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     infoWindow.open(map);
 }
 
-
-
-if (localStorage.getItem("selectedCity")) {
-    firebaseAdded("city", "selectedCity");
-}
-
-function firebaseAdded(parameter1, parameter2) {
-    database.ref().orderByChild(parameter1).equalTo(localStorage.getItem(parameter2)).on("child_added", function (snapshot) {
-        childName = snapshot.val().name;
-        childAge = snapshot.val().age;
-        childGender = snapshot.val().gender;
-        childCity = snapshot.val().city;
-
-        console.log(database.ref("gender").once("value"));
-
-        if (localStorage.getItem("selectedGender", gender) !== childGender) {
-            var tableRow = $("<tr>");
-            $("#tableBody").append(tableRow);
-
-            var tableName = $("<td>");
-            tableRow.append(tableName.text(childName));
-
-            var tableAge = $("<td>");
-            tableRow.append(tableAge.text(childAge));
-
-            var tableGender = $("<td>");
-            tableRow.append(tableGender.text(childGender));
-
-            var tableCity = $("<td>");
-            tableRow.append(tableCity.text(childCity));
-        }
-    });
-}
 
