@@ -19,6 +19,9 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     
     <script src="https://www.gstatic.com/firebasejs/5.9.4/firebase.js"></script>
+    
+    <script src='https://static-assets.mapbox.com/gl-pricing/dist/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css' rel='stylesheet' />
 </head>
 
 <body>
@@ -34,7 +37,7 @@
             <div class="col-md-12">
                 <!-- Current Tiffs-->
                 <div class="card mb-4">
-                    <div class="card-header">Tiffs List</div>
+                    <div class="card-header">Your Tiff List</div>
                     <div class="card-body">
                         <table class="table table-sm table-hover" id='tiff-table'>
                             <thead>
@@ -45,17 +48,31 @@
                                     <th scope="col">City</th>
                                 </tr>
                             </thead>
+
+                            <tbody id="tableBody"></tbody>
+
                             <tbody id="tableBody">
 
                             </tbody>
+
                         </table>
                     </div>
                 </div>
             </div>
         </div>
+
+
+
+        <div id='map' style='width: 100%; height: 300px;'></div>
+
     </div>
 
     </div>
+
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCC1GrPU0Zusp2S4aXoD_wyYZcR-4Yg3KY&callback=initMap">
+    </script>
+
     <script src="assets/app.js"></script>
 </body>
 
