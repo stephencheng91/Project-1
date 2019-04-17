@@ -11,23 +11,20 @@ var config = {
 
 firebase.initializeApp(config);
 
-
 var database = firebase.database();
 
+var name = "";
+var age = 0;
+var city = "";
+var gender = "";
+var politics = "";
+var religion = "";
+var computer = "";
+var guns = "";
 
-//Variables used to hold user information
- var name = "";
- var age = 0;
- var city = "";
- var gender = "";
- var politics = "";
- var religion = "";
- var computer = "";
- var guns = "";
 
-//On clicking submit button, save the entered in values
- $("#add-user-btn").click(function(event) {
-   
+$("#add-user-btn").click(function (event) {
+
     event.preventDefault();
 
     name = $("#name-input").val();
@@ -56,6 +53,7 @@ var database = firebase.database();
     })
 
 //Clear local storage and then save the users information
+
     localStorage.clear();
     localStorage.setItem('selectedName', name);
     localStorage.setItem('selectedAge', age);
@@ -64,17 +62,14 @@ var database = firebase.database();
     localStorage.setItem('selectedPolitics', politics);
     localStorage.setItem('selectedReligion', religion);
     localStorage.setItem('selectedComputer', computer);
-    localStorage.setItem('selectedGuns', guns );
+    localStorage.setItem('selectedGuns', guns);
 
-    database.ref().orderByChild("city").equalTo(city).on("child_added", function (snapshot) {
+});
 
-        console.log("filtering", snapshot.val());
-      });
- })
 
-//Switch to matches page on clicking submit button
- $("#add-user-btn").click(function() {
-	window.location = 'matches.html';
+$("#add-user-btn").click(function (event) {
+    event.preventDefault();
+    window.location = "matches.html";
 })
 
 
@@ -108,6 +103,9 @@ if (localStorage.getItem("selectedCity")) {
         var tableGender = $("<td>");
         tableRow.append(tableGender.text(childGender));
 
+})
+
+
         var tableCity = $("<td>");
         tableRow.append(tableCity.text(childCity));
 
@@ -140,7 +138,7 @@ if (localStorage.getItem("selectedCity")) {
  }
 
 
-var map, infoWindow;
+var map = infoWindow;
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: -34.397, lng: 150.644 },
@@ -177,4 +175,4 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     infoWindow.open(map);
 }
 
-    
+
