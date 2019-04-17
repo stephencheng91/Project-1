@@ -14,13 +14,15 @@ firebase.initializeApp(config);
 
 var database = firebase.database();
 
-var name = "";
-var age = 0;
-var city = "";
-var gender = "";
-
-$("#add-user-btn").click(function (event) {
-
+ var name = "";
+ var age = 0;
+ var city = "";
+ var gender = "";
+ var politics = "";
+ var religion = "";
+ var computer = "";
+ var guns = "";
+$('#add-usr-btn').click(function(event){
     event.preventDefault();
 
     name = $("#name-input").val();
@@ -31,48 +33,71 @@ $("#add-user-btn").click(function (event) {
     } else {
         gender = "female"
     }
-
+    religion = $("#religion-input").val();
+    computer = $("#computer-input").val();
+    guns = $("#guns-input").val();
 
     database.ref().push({
         name: name,
         age: age,
         city: city,
-        gender: gender
+        gender: gender,
+        religion: religion,
+        computer: computer,
+        guns: guns
     })
-})
+
+    localStorage.clear();
+    localStorage.setItem('selectedName', name);
+    localStorage.setItem('selectedAge', age);
+    localStorage.setItem('selectedCity', city);
+    localStorage.setItem('selectedGender', gender);
+    localStorage.setItem('selectedReligion', religion);
+    localStorage.setItem('selectedComputer', computer);
+    localStorage.setItem('selectedGuns', guns );
+
+    database.ref().orderByChild("city").equalTo(city).on("child_added", function (snapshot) {
+
+        console.log("filtering", snapshot.val());
+    });
+ })
 
 $("#add-user-btn").click(function () {
     window.location = 'matches.html';
 })
 
-database.ref().on("child_added", function (snapshot, prevChildKey) {
 
-    console.log(prevChildKey);
+if (localStorage.getItem("selectedCity")) {
+        firebaseAdded("city", "selectedCity");
+ }
 
-    var childName = snapshot.val().name;
-    var childAge = snapshot.val().age;
-    var childGender = snapshot.val().gender;
-    var childCity = snapshot.val().city;
+ function firebaseAdded(parameter1, parameter2) {
+    database.ref().orderByChild(parameter1).equalTo(localStorage.getItem(parameter2)).on("child_added", function (snapshot) {
+        childName = snapshot.val().name;
+        childAge = snapshot.val().age;
+        childGender = snapshot.val().gender;
+        childCity = snapshot.val().city;
 
-    var tableRow = $("<tr>");
-    $("#tableBody").append(tableRow);
+      console.log(database.ref("gender").once("value"));
+    
+      if(localStorage.getItem("selectedGender", gender) !== childGender){
+        var tableRow = $("<tr>");
+        $("#tableBody").append(tableRow);
 
-    var tableName = $("<td>");
-    tableRow.append(tableName.text(childName));
+        var tableName = $("<td>");
+        tableRow.append(tableName.text(childName));
 
-    var tableAge = $("<td>");
-    tableRow.append(tableAge.text(childAge));
+        var tableAge = $("<td>");
+        tableRow.append(tableAge.text(childAge));
 
-    var tableGender = $("<td>");
-    tableRow.append(tableGender.text(childGender));
+        var tableGender = $("<td>");
+        tableRow.append(tableGender.text(childGender));
 
-    var tableCity = $("<td>");
-    tableRow.append(tableCity.text(childCity));
-
-});
-
-
-
+        var tableCity = $("<td>");
+        tableRow.append(tableCity.text(childCity));
+      }
+    });
+}
 
 var map, infoWindow;
 function initMap() {
@@ -110,4 +135,5 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
         'Error: Your browser doesn\'t support geolocation.');
     infoWindow.open(map);
 }
+
 
