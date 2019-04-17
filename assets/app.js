@@ -11,20 +11,18 @@ var config = {
 
 firebase.initializeApp(config);
 
-
 var database = firebase.database();
 
+var name = "";
+var age = 0;
+var city = "";
+var gender = "";
+var politics = "";
+var religion = "";
+var computer = "";
+var guns = "";
 
- var name = "";
- var age = 0;
- var city = "";
- var gender = "";
- var politics = "";
- var religion = "";
- var computer = "";
- var guns = "";
-
-
+$("#add-user-btn").click(function (event) {
     event.preventDefault();
 
     name = $("#name-input").val();
@@ -48,10 +46,6 @@ var database = firebase.database();
         computer: computer,
         guns: guns
     })
-
-})
-
-
     localStorage.clear();
     localStorage.setItem('selectedName', name);
     localStorage.setItem('selectedAge', age);
@@ -59,17 +53,14 @@ var database = firebase.database();
     localStorage.setItem('selectedGender', gender);
     localStorage.setItem('selectedReligion', religion);
     localStorage.setItem('selectedComputer', computer);
-    localStorage.setItem('selectedGuns', guns );
+    localStorage.setItem('selectedGuns', guns);
 
-    database.ref().orderByChild("city").equalTo(city).on("child_added", function (snapshot) {
-
-        console.log("filtering", snapshot.val());
-      });
- })
+});
 
 
-$("#add-user-btn").click(function () {
-    window.location = 'matches.html';
+$("#add-user-btn").click(function (event) {
+    event.preventDefault();
+    window.location = "matches.html";
 })
 
 
@@ -97,12 +88,12 @@ database.ref().on("child_added", function (snapshot, prevChildKey) {
     var tableCity = $("<td>");
     tableRow.append(tableCity.text(childCity));
 
-});
+})
 
 
 
 
-var map, infoWindow;
+var map = infoWindow;
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: -34.397, lng: 150.644 },
@@ -142,34 +133,34 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 
 
 if (localStorage.getItem("selectedCity")) {
-        firebaseAdded("city", "selectedCity");
- }
+    firebaseAdded("city", "selectedCity");
+}
 
- function firebaseAdded(parameter1, parameter2) {
+function firebaseAdded(parameter1, parameter2) {
     database.ref().orderByChild(parameter1).equalTo(localStorage.getItem(parameter2)).on("child_added", function (snapshot) {
         childName = snapshot.val().name;
         childAge = snapshot.val().age;
         childGender = snapshot.val().gender;
         childCity = snapshot.val().city;
 
-      console.log(database.ref("gender").once("value"));
-    
-      if(localStorage.getItem("selectedGender", gender) !== childGender){
-        var tableRow = $("<tr>");
-        $("#tableBody").append(tableRow);
+        console.log(database.ref("gender").once("value"));
 
-        var tableName = $("<td>");
-        tableRow.append(tableName.text(childName));
+        if (localStorage.getItem("selectedGender", gender) !== childGender) {
+            var tableRow = $("<tr>");
+            $("#tableBody").append(tableRow);
 
-        var tableAge = $("<td>");
-        tableRow.append(tableAge.text(childAge));
+            var tableName = $("<td>");
+            tableRow.append(tableName.text(childName));
 
-        var tableGender = $("<td>");
-        tableRow.append(tableGender.text(childGender));
+            var tableAge = $("<td>");
+            tableRow.append(tableAge.text(childAge));
 
-        var tableCity = $("<td>");
-        tableRow.append(tableCity.text(childCity));
-      }
+            var tableGender = $("<td>");
+            tableRow.append(tableGender.text(childGender));
+
+            var tableCity = $("<td>");
+            tableRow.append(tableCity.text(childCity));
+        }
     });
 }
 
