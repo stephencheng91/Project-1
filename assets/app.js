@@ -13,17 +13,6 @@ firebase.initializeApp(config);
 
 var database = firebase.database();
 
-<<<<<<< HEAD
- var name = "";
- var age = 0;
- var city = "";
- var gender = "";
- var politics = "";
- var religion = "";
- var computer = "";
- var guns = "";
-$('#add-usr-btn').click(function(event){
-=======
 var name = "";
 var age = 0;
 var city = "";
@@ -34,7 +23,6 @@ var computer = "";
 var guns = "";
 
 $("#add-user-btn").click(function (event) {
->>>>>>> edea0f296708fe00fabfa2cf396372d7fcd21cf1
     event.preventDefault();
 
     name = $("#name-input").val();
@@ -58,10 +46,6 @@ $("#add-user-btn").click(function (event) {
         computer: computer,
         guns: guns
     })
-<<<<<<< HEAD
-
-=======
->>>>>>> edea0f296708fe00fabfa2cf396372d7fcd21cf1
     localStorage.clear();
     localStorage.setItem('selectedName', name);
     localStorage.setItem('selectedAge', age);
@@ -73,25 +57,16 @@ $("#add-user-btn").click(function (event) {
 
 });
 
-<<<<<<< HEAD
-        console.log("filtering", snapshot.val());
-    });
- })
-=======
->>>>>>> edea0f296708fe00fabfa2cf396372d7fcd21cf1
 
 $("#add-user-btn").click(function (event) {
     event.preventDefault();
     window.location = "matches.html";
 })
 
-<<<<<<< HEAD
-=======
 
 database.ref().on("child_added", function (snapshot, prevChildKey) {
 
     console.log(prevChildKey);
->>>>>>> edea0f296708fe00fabfa2cf396372d7fcd21cf1
 
 if (localStorage.getItem("selectedCity")) {
         firebaseAdded("city", "selectedCity");
@@ -110,12 +85,7 @@ if (localStorage.getItem("selectedCity")) {
         var tableRow = $("<tr>");
         $("#tableBody").append(tableRow);
 
-<<<<<<< HEAD
-        var tableName = $("<td>");
-        tableRow.append(tableName.text(childName));
-=======
 })
->>>>>>> edea0f296708fe00fabfa2cf396372d7fcd21cf1
 
         var tableAge = $("<td>");
         tableRow.append(tableAge.text(childAge));
@@ -166,9 +136,6 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     infoWindow.open(map);
 }
 
-<<<<<<< HEAD
-
-=======
 
 
 if (localStorage.getItem("selectedCity")) {
@@ -203,4 +170,3 @@ function firebaseAdded(parameter1, parameter2) {
     });
 }
 
->>>>>>> edea0f296708fe00fabfa2cf396372d7fcd21cf1
