@@ -40,23 +40,22 @@
                     <div class="card-header">Your Tiff List</div>
                     <div class="card-body">
                         <div class="table-responsive">
-                        <table class="table table-xl table-hover" id='tiff-table'>
-                            <thead>
-                                <tr>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Age</th>
-                                    <th scope="col">Gender</th>
-                                    <th scope="col">City</th>
-                                    <th scope="col">Politics</th>
-                                </tr>
-                            </thead>
+                            <table class="table table-xl table-hover" id='tiff-table'>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Age</th>
+                                        <th scope="col">Gender</th>
+                                        <th scope="col">City</th>
+                                    </tr>
+                                </thead>
 
-                            <tbody id="tableBody">
-                                
-                            </tbody>
+                                <tbody id="tableBody">
 
-                        </table>
-                    </div></div>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -64,16 +63,41 @@
 
 
         <div id='map' style='width: 100%; height: 300px;'></div>
-
+        </br>
     </div>
 
-    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Current Tiffs-->
+                <div class="card mb-4">
+                    <div class="card-header">Ideas?</div>
+                    <button class="btn btn-primary float-left" id="newYorkTimes">Click to Generate</button>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-xl table-hover" id='tiff-table'>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Title</th>
+                                        <th scope="col">Link</th>
+                                    </tr>
+                                </thead>
 
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCC1GrPU0Zusp2S4aXoD_wyYZcR-4Yg3KY&callback=initMap">
-        </script>
+                                <tbody id="articleList">
 
-    <script src="assets/app.js"></script>
+                                </tbody>
+                                
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <script async defer
+                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCC1GrPU0Zusp2S4aXoD_wyYZcR-4Yg3KY&callback=initMap">
+                    </script>
+
+                <script src="assets/app.js"></script>
 </body>
 
 </html>

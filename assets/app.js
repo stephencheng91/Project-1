@@ -22,7 +22,9 @@ var religion = "";
 var computer = "";
 var guns = "";
 
+
 $("#add-user-btn").click(function (event) {
+
     event.preventDefault();
 
     name = $("#name-input").val();
@@ -38,6 +40,7 @@ $("#add-user-btn").click(function (event) {
     computer = $("#computer-input").val();
     guns = $("#guns-input").val();
 
+    //Push these variables to firebase
     database.ref().push({
         name: name,
         age: age,
@@ -45,9 +48,13 @@ $("#add-user-btn").click(function (event) {
         gender: gender,
         politics: politics,
         religion: religion,
+        politics: politics,
         computer: computer,
         guns: guns
     })
+
+    //Clear local storage and then save the users information
+
     localStorage.clear();
     localStorage.setItem('selectedName', name);
     localStorage.setItem('selectedAge', age);
@@ -66,6 +73,68 @@ $("#add-user-btn").click(function (event) {
     window.location = "matches.html";
 })
 
+
+if (localStorage.getItem("selectedCity")) {
+    firebaseAdded("city", "selectedCity");
+}
+
+function firebaseAdded(parameter1, parameter2) {
+    database.ref().orderByChild(parameter1).equalTo(localStorage.getItem(parameter2)).on("child_added", function (snapshot) {
+        childName = snapshot.val().name;
+        childAge = snapshot.val().age;
+        childGender = snapshot.val().gender;
+        childCity = snapshot.val().city;
+        childReligion = snapshot.val().religion
+        childPolitics = snapshot.val().politics
+        childGuns = snapshot.val().guns
+        childComputer = snapshot.val().computer
+
+
+        if (localStorage.getItem("selectedGender", gender) !== childGender) {
+            var tableRow = $("<tr>");
+            $("#tableBody").append(tableRow);
+
+            var tableName = $("<td>");
+            tableRow.append(tableName.text(childName));
+
+            var tableAge = $("<td>");
+            tableRow.append(tableAge.text(childAge));
+
+            var tableGender = $("<td>");
+            tableRow.append(tableGender.text(childGender));
+
+            var tableCity = $("<td>");
+            tableRow.append(tableCity.text(childCity));
+
+            var tableSecondRow = $("<tr>")
+
+            var areasOfConflict = "AREAS OF CONFLICT: ";
+            // $(areasOfConflict.css({'font-weight': 'Bold'})
+            var conflict = $("<td>")
+            conflict.attr("colspan", 4)
+            conflict.css("background", "red")
+
+            if (localStorage.getItem("selectedReligion", religion) !== childReligion) {
+                areasOfConflict += "Religion: " + childReligion + " ";
+            }
+            if (localStorage.getItem("selectedPolitics", politics) !== childPolitics) {
+                areasOfConflict += "Politics: " + childPolitics + " ";
+            }
+            if (localStorage.getItem("selectedGuns", guns) !== childGuns) {
+                areasOfConflict += "Gun Control: " + childGuns + " ";
+            }
+            if (localStorage.getItem("selectedComputer", computer) !== childComputer) {
+                areasOfConflict += "Computer Preference: " + childComputer + " ";
+            }
+
+            conflict.text(areasOfConflict);
+            tableSecondRow.append(conflict);
+            $("#tableBody").append(tableSecondRow);
+        }
+    })
+}
+
+//map API
 var map, infoWindow;
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
@@ -103,48 +172,41 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     infoWindow.open(map);
 }
 
+//New York Times API
+function buildQueryURL() {
 
-
-if (localStorage.getItem("selectedCity")) {
-    firebaseAdded("city", "selectedCity");
+    var queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?";
+    var queryParams = { "api-key": "R1a31F4tBjCUaM2ho8GtIFsrSdtXt30M" };
+    queryParams.q = "fights"
+    return queryURL + $.param(queryParams);
 }
 
-function firebaseAdded(parameter1, parameter2) {
-    database.ref().orderByChild(parameter1).equalTo(localStorage.getItem(parameter2)).on("child_added", function (snapshot) {
-        childName = snapshot.val().name;
-        childAge = snapshot.val().age;
-        childGender = snapshot.val().gender;
-        childCity = snapshot.val().city;
-        childPolitics = snapshot.val().politics;
+function updatePage(NYTData) {
 
-        console.log(database.ref("gender").once("value"));
+    for (var i = 0; i < 5; i++) {
+        var article = NYTData.response.docs[i];
+        var $articleList = $("<tr>");
 
-        if (localStorage.getItem("selectedGender", gender) == childGender) {
+        $("#articleList").append($articleList);
 
-            if (localStorage.getItem("selectedPolitics", politics) !== childPolitics) {
-                
-                
+        var headline = article.headline;
+        var articleHeadline = $("<td>");
+        var articleLink = $("<td>");
 
-                var tableRow = $("<tr>");
-                $("#tableBody").append(tableRow);
+        articleHeadline.append("<strong> " + headline.main + "</strong>")
+        articleLink.append("<a href='" + article.web_url + "'>" + article.web_url + "</a>");
 
-                var tableName = $("<td>");
-                tableRow.append(tableName.text(childName));
-
-                var tableAge = $("<td>");
-                tableRow.append(tableAge.text(childAge));
-
-                var tableGender = $("<td>");
-                tableRow.append(tableGender.text(childGender));
-
-                var tableCity = $("<td>");
-                tableRow.append(tableCity.text(childCity));
-
-                var tablePolitics = $("<td>");
-                tableRow.append(tablePolitics.text(childPolitics));
-            }
-
-        }
-    });
+        $articleList.append(articleHeadline);
+        $articleList.append(articleLink);
+    }
 }
+
+$("#newYorkTimes").on("click", function (event) {
+    event.preventDefault();
+    var queryURL = buildQueryURL();
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+    }).then(updatePage);
+});
 
