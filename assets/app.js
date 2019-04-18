@@ -112,7 +112,8 @@ function firebaseAdded(parameter1, parameter2) {
             // $(areasOfConflict.css({'font-weight': 'Bold'})
             var conflict = $("<td>")
             conflict.attr("colspan", 4)
-            conflict.css("background", "red")
+            conflict.css("background", "#8B181A")
+            conflict.css("color", "white")
 
             if (localStorage.getItem("selectedReligion", religion) !== childReligion) {
                 areasOfConflict += "Religion: " + childReligion + " ";
