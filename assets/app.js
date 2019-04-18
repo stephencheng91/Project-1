@@ -40,19 +40,20 @@ $("#add-user-btn").click(function (event) {
     computer = $("#computer-input").val();
     guns = $("#guns-input").val();
 
-//Push these variables to firebase
+    //Push these variables to firebase
     database.ref().push({
         name: name,
         age: age,
         city: city,
         gender: gender,
+        politics: politics,
         religion: religion,
         politics: politics,
         computer: computer,
         guns: guns
     })
 
-//Clear local storage and then save the users information
+    //Clear local storage and then save the users information
 
     localStorage.clear();
     localStorage.setItem('selectedName', name);
@@ -74,10 +75,10 @@ $("#add-user-btn").click(function (event) {
 
 
 if (localStorage.getItem("selectedCity")) {
-        firebaseAdded("city", "selectedCity");
- }
+    firebaseAdded("city", "selectedCity");
+}
 
- function firebaseAdded(parameter1, parameter2) {
+function firebaseAdded(parameter1, parameter2) {
     database.ref().orderByChild(parameter1).equalTo(localStorage.getItem(parameter2)).on("child_added", function (snapshot) {
         childName = snapshot.val().name;
         childAge = snapshot.val().age;
@@ -88,45 +89,41 @@ if (localStorage.getItem("selectedCity")) {
         childGuns = snapshot.val().guns
         childComputer = snapshot.val().computer
 
-      //console.log(database.ref("gender").once("value"));
-    
-      if(localStorage.getItem("selectedGender", gender) !== childGender){
-        var tableRow = $("<tr>");
-        $("#tableBody").append(tableRow);
 
-        var tableName = $("<td>");
-        tableRow.append(tableName.text(childName));
+        if (localStorage.getItem("selectedGender", gender) !== childGender) {
+            var tableRow = $("<tr>");
+            $("#tableBody").append(tableRow);
 
-        var tableAge = $("<td>");
-        tableRow.append(tableAge.text(childAge));
+            var tableName = $("<td>");
+            tableRow.append(tableName.text(childName));
 
-        var tableGender = $("<td>");
-        tableRow.append(tableGender.text(childGender));
+            var tableAge = $("<td>");
+            tableRow.append(tableAge.text(childAge));
 
-})
+            var tableGender = $("<td>");
+            tableRow.append(tableGender.text(childGender));
 
+            var tableCity = $("<td>");
+            tableRow.append(tableCity.text(childCity));
 
-        var tableCity = $("<td>");
-        tableRow.append(tableCity.text(childCity));
+            var tableSecondRow = $("<tr>")
 
-        var tableSecondRow = $("<tr>")
-        
-        var areasOfConflict = "AREAS OF CONFLICT: ";
-        // $(areasOfConflict.css({'font-weight': 'Bold'})
-        var conflict = $("<td>")
-        conflict.attr("colspan", 4)
-        conflict.css("background", "red")
-            
-            if(localStorage.getItem("selectedReligion", religion) !== childReligion) {
+            var areasOfConflict = "AREAS OF CONFLICT: ";
+            // $(areasOfConflict.css({'font-weight': 'Bold'})
+            var conflict = $("<td>")
+            conflict.attr("colspan", 4)
+            conflict.css("background", "red")
+
+            if (localStorage.getItem("selectedReligion", religion) !== childReligion) {
                 areasOfConflict += "Religion: " + childReligion + " ";
             }
-            if(localStorage.getItem("selectedPolitics", politics) !== childPolitics) {
+            if (localStorage.getItem("selectedPolitics", politics) !== childPolitics) {
                 areasOfConflict += "Politics: " + childPolitics + " ";
             }
-            if(localStorage.getItem("selectedGuns", guns) !== childGuns) {
+            if (localStorage.getItem("selectedGuns", guns) !== childGuns) {
                 areasOfConflict += "Gun Control: " + childGuns + " ";
             }
-            if(localStorage.getItem("selectedComputer", computer) !== childComputer) {
+            if (localStorage.getItem("selectedComputer", computer) !== childComputer) {
                 areasOfConflict += "Computer Preference: " + childComputer + " ";
             }
 
@@ -135,10 +132,10 @@ if (localStorage.getItem("selectedCity")) {
             $("#tableBody").append(tableSecondRow);
         }
     })
- }
+}
 
-
-var map = infoWindow;
+//map API
+var map, infoWindow;
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: -34.397, lng: 150.644 },
@@ -175,4 +172,41 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     infoWindow.open(map);
 }
 
+//New York Times API
+function buildQueryURL() {
+
+    var queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?";
+    var queryParams = { "api-key": "R1a31F4tBjCUaM2ho8GtIFsrSdtXt30M" };
+    queryParams.q = "fights"
+    return queryURL + $.param(queryParams);
+}
+
+function updatePage(NYTData) {
+
+    for (var i = 0; i < 5; i++) {
+        var article = NYTData.response.docs[i];
+        var $articleList = $("<tr>");
+
+        $("#articleList").append($articleList);
+
+        var headline = article.headline;
+        var articleHeadline = $("<td>");
+        var articleLink = $("<td>");
+
+        articleHeadline.append("<strong> " + headline.main + "</strong>")
+        articleLink.append("<a href='" + article.web_url + "'>" + article.web_url + "</a>");
+
+        $articleList.append(articleHeadline);
+        $articleList.append(articleLink);
+    }
+}
+
+$("#newYorkTimes").on("click", function (event) {
+    event.preventDefault();
+    var queryURL = buildQueryURL();
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+    }).then(updatePage);
+});
 
