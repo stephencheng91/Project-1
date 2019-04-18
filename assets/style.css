@@ -8,7 +8,6 @@ body{
     
 #tiff-table th,
  td {
-    display: inline-block;
     width: 25%;
 
  }
