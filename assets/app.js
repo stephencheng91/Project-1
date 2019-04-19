@@ -103,7 +103,7 @@ if (localStorage.getItem("selectedCity")) {
         var tableGender = $("<td>");
         tableRow.append(tableGender.text(childGender));
 
-})
+
 
 
         var tableCity = $("<td>");
