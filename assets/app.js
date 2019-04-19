@@ -139,11 +139,20 @@ function firebaseAdded(parameter1, parameter2) {
 var map, infoWindow;
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: -34.397, lng: 150.644 },
-        zoom: 6
+        center: { lat: 47.6038, lng: -122.3301 },
+        zoom: 7
     });
     infoWindow = new google.maps.InfoWindow;
-
+ 
+    var lat = "47.4799"
+    var lon = "-122.2034"
+    marker = new google.maps.Marker({
+        map: map,
+        draggable: true,
+        animation: google.maps.Animation.DROP,
+        position: {lat: parseInt(lat), lng: parseInt(lon)}
+      });
+ 
     // Try HTML5 geolocation.
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
@@ -151,7 +160,7 @@ function initMap() {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
             };
-
+ 
             infoWindow.setPosition(pos);
             infoWindow.setContent('You are here, Dude.');
             infoWindow.open(map);
@@ -163,15 +172,15 @@ function initMap() {
         // Browser doesn't support Geolocation
         handleLocationError(false, infoWindow, map.getCenter());
     }
-}
-
-function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+ }
+ 
+ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     infoWindow.setPosition(pos);
     infoWindow.setContent(browserHasGeolocation ?
         'Error: The Geolocation service failed.' :
         'Error: Your browser doesn\'t support geolocation.');
     infoWindow.open(map);
-}
+ }
 
 //New York Times API
 function buildQueryURL() {
