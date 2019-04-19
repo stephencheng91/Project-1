@@ -1,11 +1,26 @@
 
-body{
-    background-image: url("../assets/background.jpg");
-    opacity: 0.95;
-    filter: alpha(opacity=95);
-    
+/* body{
+    background-image: url("../assets/images/concretebackground.jpg");
+    width: 100%;
+    background-repeat: none;
+    background-color: white;
+}*/
+body { 
+  background: url("../assets/images/concretebackground.jpg") no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
-    
+.jumbotron {
+  background-color: white !important;
+}
+.logo {
+  align-content: center;
+  text-align: center;
+  padding-bottom: 30px;
+}
+
 #tiff-table th,
  td {
     width: 25%;
