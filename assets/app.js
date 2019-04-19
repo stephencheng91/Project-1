@@ -138,6 +138,7 @@ function firebaseAdded(parameter1, parameter2) {
 //map API
 var map, infoWindow;
 function initMap() {
+
     map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: 47.6038, lng: -122.3301 },
         zoom: 7
@@ -182,17 +183,17 @@ function initMap() {
     infoWindow.open(map);
  }
 
+
 //New York Times API
 function buildQueryURL() {
 
     var queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?";
     var queryParams = { "api-key": "R1a31F4tBjCUaM2ho8GtIFsrSdtXt30M" };
-    queryParams.q = "fights"
+    queryParams.q = "street fights"
     return queryURL + $.param(queryParams);
 }
 
 function updatePage(NYTData) {
-
     for (var i = 0; i < 5; i++) {
         var article = NYTData.response.docs[i];
         var $articleList = $("<tr>");
@@ -213,6 +214,7 @@ function updatePage(NYTData) {
 
 $("#newYorkTimes").on("click", function (event) {
     event.preventDefault();
+
     var queryURL = buildQueryURL();
     $.ajax({
         url: queryURL,
