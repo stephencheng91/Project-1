@@ -11,7 +11,7 @@ Once connect, they can argue with each other on the platform, and ultimately the
 
 Ladies and Gentlemen, let's begin the fight!
 
-![alt text](https://stephencheng91.github.io/Project-1/assets/images/tiffster-150px.png "Logo")
+![Logo Image](/assets/images/tiffster-150px.png "Logo")
 
 ## `Link to the app`
 
