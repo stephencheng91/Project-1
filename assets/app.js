@@ -48,7 +48,6 @@ $("#add-user-btn").click(function (event) {
         gender: gender,
         politics: politics,
         religion: religion,
-        politics: politics,
         computer: computer,
         guns: guns
     })
